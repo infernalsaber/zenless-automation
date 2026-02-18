@@ -9,7 +9,7 @@ from loguru import logger
 def tsleep(t: float, desc: str = ''):
     """A nicer sleep with a bar"""
     if t > 1:
-        for _ in tqdm(range(t//1), desc=desc):
+        for _ in tqdm(range(int(t//1)), desc=desc):
             sleep(1)
     sleep(t % 1)
 

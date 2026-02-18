@@ -1,5 +1,5 @@
 from pynput.mouse import Button
-from pynput.keyboard import Controller as Key
+from pynput.keyboard import Controller as KeyboardController, Key
 from random import random
 
 from utils import tsleep, CustomMouse,  CustomKeyboard
@@ -16,7 +16,7 @@ def confirm(default=(0, 0)):
 
 def initiate_errand():
     keyboard.press(Key.alt)
-    tsleep(1.5)
+    tsleep(1)
     mouse.slowlyMoveTo(100, 150, 1)
     keyboard.softPress(Key.f2)
         
@@ -46,7 +46,7 @@ def watch_the_loader(max_time=20, min_time=5):
 def coffee():
     # Try one coffee
     initiate_errand()
-    watch_the_loader()
+    watch_the_loader(min_time=6)
     keyboard.softPress('w', hold_time=1)
     keyboard.softPress('f')
     tsleep(2)
@@ -57,7 +57,7 @@ def coffee():
 def dinivation():
     # Dinivation
     initiate_errand()
-    watch_the_loader()
+    watch_the_loader(min_time=4)
     keyboard.softPress('f')
     tsleep(4)
     mouse.goToPointAndClick(1500,500)
@@ -73,11 +73,12 @@ def dinivation():
     keyboard.softPress(Key.esc)
     tsleep(2)
     keyboard.softPress(Key.esc)
+    tsleep(1)
 
 def store_mgmt():
     # Store Mgmt
     initiate_errand()
-    watch_the_loader()
+    watch_the_loader(min_time=4)
     keyboard.softPress('w', hold_time=1)
     keyboard.softPress('f')
     tsleep(2)
@@ -110,15 +111,16 @@ def store_mgmt():
 def collect_rewards():
     # Daily menu
     keyboard.softPress(Key.f2)
-    tsleep(2)
+    tsleep(1)
     mouse.goToPointAndClick(1571, 275)
     tsleep(2)
     confirm()
     keyboard.softPress(Key.esc)
     
     # City Pass
+    tsleep(1)
     keyboard.softPress(Key.f3)
-    tsleep(0.5)
+    tsleep(1)
     mouse.goToPointAndClick(1500, 50)
     tsleep(2)
     pt = mouse.findPointByImage(candidates=['pics/claim_all2.png'], default=(0, 0), confidence=0.7)
