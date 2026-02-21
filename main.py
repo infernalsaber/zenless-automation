@@ -10,9 +10,13 @@ keyboard = CustomKeyboard()
 
 
 def confirm(default=(0, 0)):
+    
     pt = mouse.findPointByImage(candidates=['pics/confirm.png', 'pics/confirm2.png'], default=default, confidence=0.7)
-    mouse.goToPointAndClick(pt[0], pt[1], 1)
+    if pt == (0, 0):
+        return False
+    mouse.goToPointAndClick(pt[0], pt[1])
     tsleep(2)
+    return True
 
 def initiate_errand():
     keyboard.press(Key.alt)
@@ -24,10 +28,10 @@ def initiate_errand():
     keyboard.release(Key.alt)
     tsleep(2)
     errand_pt = mouse.findPointByImage(candidates=['pics/errands1.png', 'pics/errands2.png'], default=(973, 148), confidence=0.7)
-    mouse.slowlyMoveTo(errand_pt[0], errand_pt[1], 1)
-    mouse.click(Button.left)
-    tsleep(2)
+    mouse.goToPointAndClick(errand_pt[0], errand_pt[1], 1)
+    tsleep(1.5)
     mouse.goToPointAndClick(986,834)
+    tsleep(2)
     mouse.goToPointAndClick(1121,628) # Teleport
 
 def watch_the_loader(max_time=20, min_time=5):
@@ -46,7 +50,7 @@ def watch_the_loader(max_time=20, min_time=5):
 def coffee():
     # Try one coffee
     initiate_errand()
-    watch_the_loader(min_time=6)
+    watch_the_loader(min_time=10)
     keyboard.softPress('w', hold_time=1)
     keyboard.softPress('f')
     tsleep(2)
@@ -59,7 +63,7 @@ def dinivation():
     initiate_errand()
     watch_the_loader(min_time=4)
     keyboard.softPress('f')
-    tsleep(4)
+    tsleep(3)
     mouse.goToPointAndClick(1500,500)
     tsleep(2)   
     #Dragging
@@ -67,13 +71,17 @@ def dinivation():
     for _ in range(7):
         mouse.slowlyMoveTo(400 + random()*50, 500 + random()*50, 1)
         mouse.slowlyMoveTo(900 + random()*50, 500 - random()*50, 1)
+    
+        if mouse.findPointByImage(candidates=['pics/confirm.png', 'pics/confirm2.png'], default=(0, 0), confidence=0.7) != (0, 0):
+            break
+            
     mouse.release(Button.left)
     tsleep(2)
     confirm()
     keyboard.softPress(Key.esc)
     tsleep(2)
     keyboard.softPress(Key.esc)
-    tsleep(1)
+    tsleep(2)
 
 def store_mgmt():
     # Store Mgmt
@@ -96,7 +104,6 @@ def store_mgmt():
     tsleep(2)
     confirm()
     
-
     # Select movies
     mouse.goToPointAndClick(1200, 750)
     pt = mouse.findPointByImage(candidates=['pics/store_mgmt_movies.png'], default=(1400, 1030), confidence=0.7)
@@ -110,17 +117,18 @@ def store_mgmt():
 
 def collect_rewards():
     # Daily menu
+    tsleep(2)
     keyboard.softPress(Key.f2)
-    tsleep(1)
+    tsleep(2)
     mouse.goToPointAndClick(1571, 275)
     tsleep(2)
     confirm()
     keyboard.softPress(Key.esc)
     
     # City Pass
-    tsleep(1)
+    tsleep(2)
     keyboard.softPress(Key.f3)
-    tsleep(1)
+    tsleep(2)
     mouse.goToPointAndClick(1500, 50)
     tsleep(2)
     pt = mouse.findPointByImage(candidates=['pics/claim_all2.png'], default=(0, 0), confidence=0.7)
