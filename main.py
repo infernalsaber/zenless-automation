@@ -1,175 +1,118 @@
-from pynput.mouse import Button
-from pynput.keyboard import Controller as KeyboardController, Key
-from random import random
+import ipdb
+import ctypes
+import sys
+import subprocess
+import os
+from time import sleep
+from pynput.keyboard import Key
 
-from utils import tsleep, CustomMouse,  CustomKeyboard
-
+from utils import tsleep, CustomMouse, CustomKeyboard, load_config
+from hoyolab import check_dailies_status
+from common import confirm, watch_the_loader
+from dailies import complete_dailies
 
 mouse = CustomMouse()
 keyboard = CustomKeyboard()
+config = load_config()
 
-
-def confirm(default=(0, 0)):
-    
-    pt = mouse.findPointByImage(candidates=['pics/confirm.png', 'pics/confirm2.png'], default=default, confidence=0.7)
-    if pt == (0, 0):
-        return False
-    mouse.goToPointAndClick(pt[0], pt[1])
-    tsleep(2)
-    return True
-
-def initiate_errand():
-    keyboard.press(Key.alt)
-    tsleep(1)
-    mouse.slowlyMoveTo(100, 150, 1)
-    keyboard.softPress(Key.f2)
-        
-    
-    keyboard.release(Key.alt)
-    tsleep(2)
-    errand_pt = mouse.findPointByImage(candidates=['pics/errands1.png', 'pics/errands2.png'], default=(973, 148), confidence=0.7)
-    mouse.goToPointAndClick(errand_pt[0], errand_pt[1], 1)
-    tsleep(1.5)
-    mouse.goToPointAndClick(986,834)
-    tsleep(2)
-    mouse.goToPointAndClick(1121,628) # Teleport
-
-def watch_the_loader(max_time=20, min_time=5):
-    elapsed = 0
-    while elapsed < max_time:
-        tsleep(2)
-        pt = mouse.findPointByImage(candidates=['pics/loading.png'], default=(0, 0), confidence=0.7)
-        if pt == (0, 0):
-            break
-        elapsed += 1
-    
-    if elapsed < min_time:
-        tsleep(min_time - elapsed)
-    
-
-def coffee():
-    # Try one coffee
-    initiate_errand()
-    watch_the_loader(min_time=10)
-    keyboard.softPress('w', hold_time=1)
-    keyboard.softPress('f')
-    tsleep(2)
-    keyboard.softPress('1')
-    tsleep(2)
-    confirm()
-
-def dinivation():
-    # Dinivation
-    initiate_errand()
-    watch_the_loader(min_time=4)
-    keyboard.softPress('f')
-    tsleep(3)
-    mouse.goToPointAndClick(1500,500)
-    tsleep(2)   
-    #Dragging
-    mouse.press(Button.left)
-    for _ in range(7):
-        mouse.slowlyMoveTo(400 + random()*50, 500 + random()*50, 1)
-        mouse.slowlyMoveTo(900 + random()*50, 500 - random()*50, 1)
-    
-        if mouse.findPointByImage(candidates=['pics/confirm.png', 'pics/confirm2.png'], default=(0, 0), confidence=0.7) != (0, 0):
-            break
-            
-    mouse.release(Button.left)
-    tsleep(2)
-    confirm()
-    keyboard.softPress(Key.esc)
-    tsleep(2)
-    keyboard.softPress(Key.esc)
-    tsleep(2)
-
-def store_mgmt():
-    # Store Mgmt
-    initiate_errand()
-    watch_the_loader(min_time=4)
-    keyboard.softPress('w', hold_time=1)
-    keyboard.softPress('f')
-    tsleep(2)
-    keyboard.softPress('1')
-    tsleep(2)
-    if mouse.findPointByImage(candidates=['pics/store_mgmt.png'], default=(0, 0), confidence=0.7) == (0, 0):
-        tsleep(2)
-        keyboard.softPress(Key.esc)
-    
-    # Select Character
-    tsleep(2)
-    pt = mouse.findPointByImage(candidates=['pics/store_mgmt.png'], default=(900, 750), confidence=0.7)
-    mouse.goToPointAndClick(pt[0], pt[1])
-    
-    tsleep(2)
-    confirm()
-    
-    # Select movies
-    mouse.goToPointAndClick(1200, 750)
-    pt = mouse.findPointByImage(candidates=['pics/store_mgmt_movies.png'], default=(1400, 1030), confidence=0.7)
-    mouse.goToPointAndClick(pt[0], pt[1])
-    
-    tsleep(2)
-    mouse.goToPointAndClick(1700, 980)
-    tsleep(2)
-    confirm()
-    confirm()
 
 def collect_rewards():
     # Daily menu
-    tsleep(2)
+    sleep(2)
     keyboard.softPress(Key.f2)
-    tsleep(2)
+    sleep(2)
     mouse.goToPointAndClick(1571, 275)
-    tsleep(2)
+    sleep(2)
     confirm()
     keyboard.softPress(Key.esc)
-    
+
     # City Pass
-    tsleep(2)
+    sleep(2)
     keyboard.softPress(Key.f3)
-    tsleep(2)
+    sleep(2)
     mouse.goToPointAndClick(1500, 50)
-    tsleep(2)
-    pt = mouse.findPointByImage(candidates=['pics/claim_all2.png'], default=(0, 0), confidence=0.7)
-    if pt != (0, 0):
+    sleep(2)
+    pt = mouse.findPointByImage(candidates=['pics/claim_all2.png'], confidence=0.7)
+    if pt:
         mouse.goToPointAndClick(pt[0], pt[1])
-        tsleep(2)
+        sleep(2)
         keyboard.softPress(Key.esc)
 
-def boot_application():
-    
-    key_pos = '1'
-    keyboard.holdKey([Key.cmd, key_pos], hold_time=0.4)
-    tsleep(5)
-    keyboard.softPress(Key.left)
-    tsleep(0.5)
-    keyboard.softPress(Key.enter)
-    tsleep(10)
-    mouse.goToPointAndClick(950, 900)
-    tsleep(10)
-    mouse.goToPointAndClick(950, 900)
-    tsleep(5)
+
+def login():
+    pt = mouse.findPointByImage(candidates=['pics/p2p.png', 'pics/p2p_2.png'], default=(1000, 900), confidence=0.7)
+    mouse.goToPointAndClick(pt[0], pt[1])
+    watch_the_loader(pics=['pics/loading_config.png'], min_time=15, max_time=90)
+
+    if confirm():
+        pt = mouse.findPointByImage(candidates=['pics/p2p.png', 'pics/p2p_2.png'], default=(1000, 900), confidence=0.7)
+        mouse.goToPointAndClick(pt[0], pt[1])
+        tsleep(60)
+
+    pt = mouse.findPointByImage(candidates=['pics/p2p.png', 'pics/p2p_2.png'], default=(1000, 900), confidence=0.7)
+    mouse.goToPointAndClick(pt[0], pt[1])
+    tsleep(15)
     watch_the_loader()
-    
+
+
+def monthly():
+    pt = mouse.findPointByImage(candidates=['pics/monthly.png', 'pics/monthly_2.png'])
+    if pt:
+        mouse.goToPointAndClick(pt[0], pt[1])
+        sleep(2)
+
+
+def confirm_login() -> bool:
+    for _ in range(5):
+        if mouse.findPointByImage(candidates=['pics/login_confirm.png']):
+            print("Logged in")
+            return True
+        sleep(1)
+    return False
+
+
+def launch_app():
+    def is_admin():
+        try:
+            return ctypes.windll.shell32.IsUserAnAdmin()
+        except:
+            return False
+
+    if is_admin():
+        subprocess.Popen([config['game_path']], cwd=os.path.dirname(config['game_path']))
+    else:
+        # Re-launch this script with admin rights (triggers UAC once)
+        ctypes.windll.shell32.ShellExecuteW(
+            None, "runas", sys.executable, f'"{__file__}"', None, 1
+        )
+
 
 def main():
-    tsleep(5, desc="Starting in") 
-    
-    # boot_application()
-    coffee()
-    dinivation()
-    store_mgmt()
-        
+    if check_dailies_status():
+        print("Dailies are complete")
+        return
+    else:
+        print("Dailies are not complete, starting tasks")
+
+    launch_app()
+    tsleep(30)
+    login()
+    monthly()
+    if not confirm_login():
+        print("Login failed")
+        return
+
+    tsleep(5, desc="Starting in")
+
+    complete_dailies()
     collect_rewards()
 
-    # some verification goes here, maybe eventually
-    # ----
+    if check_dailies_status():
+        print("Dailies are complete")
 
     tsleep(5, desc="Closing in")
     keyboard.holdKey([Key.alt, Key.f4], hold_time=0.4)
-    
+
 
 if __name__ == "__main__":
     main()
-    

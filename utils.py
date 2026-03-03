@@ -6,6 +6,13 @@ import pyautogui
 import random
 from loguru import logger
 
+import json
+
+def load_config():
+    """Loads the config file"""
+    with open('config.json', 'r', encoding='utf-8') as f:
+        return json.load(f)
+
 def tsleep(t: float, desc: str = ''):
     """A nicer sleep with a bar"""
     if t > 1:
@@ -43,14 +50,21 @@ class CustomMouse(Controller):
         self.slowlyMoveTo(x, y, delay)
         self.click(Button.left, 1)
         
-    def findPointByImage(self, candidates: list =[], default: tuple =(), confidence=0.7) -> tuple:
-        
-        if not candidates and not default:
+    def findPointByImage(self, candidates: list = None, default: tuple = None, confidence: float = 0.7) -> tuple | None:
+        """
+        Searches for any of the candidate images on screen.
+        Returns the center point of the first match found, the fallback `default`
+        coordinate if none matched, or None if neither is available.
+        """
+        if candidates is None:
+            candidates = []
+
+        if not candidates and default is None:
             raise ValueError("Either candidates or default must be provided.")
-        
+
         if not candidates:
             return default
-        
+
         for image in candidates:
             try:
                 loc = pyautogui.locateOnScreen(image, confidence=confidence)
