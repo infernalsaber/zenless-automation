@@ -19,8 +19,8 @@ def initiate_errand():
     keyboard.release(Key.alt)
     sleep(2)
 
-    if not mouse.findPointByImage(candidates=['pics/errands2.png'], confidence=0.7):
-        errand_pt = mouse.findPointByImage(candidates=['pics/errands1.png', 'pics/errands2.png'], default=(973, 148), confidence=0.7)
+    if not mouse.findPointByImage(candidates=['pics/errands2.png']):
+        errand_pt = mouse.findPointByImage(candidates=['pics/errands1.png', 'pics/errands2.png'], default=(973, 148))
         mouse.goToPointAndClick(errand_pt[0], errand_pt[1], 1)
         sleep(1)
     sleep(0.5)
@@ -54,7 +54,7 @@ def dinivation():
         mouse.slowlyMoveTo(400 + random() * 50, 500 + random() * 50, 1)
         mouse.slowlyMoveTo(900 + random() * 50, 500 - random() * 50, 1)
 
-        if mouse.findPointByImage(candidates=['pics/confirm.png', 'pics/confirm2.png'], confidence=0.7):
+        if mouse.findPointByImage(candidates=['pics/confirm.png', 'pics/confirm2.png']):
             break
 
     mouse.release(Button.left)
@@ -74,13 +74,13 @@ def store_mgmt():
     sleep(2)
     keyboard.softPress('1')
     sleep(2)
-    if not mouse.findPointByImage(candidates=['pics/store_mgmt.png'], confidence=0.7):
+    if not mouse.findPointByImage(candidates=['pics/store_mgmt.png']):
         sleep(2)
         keyboard.softPress(Key.esc)
 
     # Select Character
     sleep(2)
-    pt = mouse.findPointByImage(candidates=['pics/store_mgmt.png'], default=(900, 750), confidence=0.7)
+    pt = mouse.findPointByImage(candidates=['pics/store_mgmt.png'], default=(900, 750))
     mouse.goToPointAndClick(pt[0], pt[1])
 
     sleep(2)
@@ -88,7 +88,7 @@ def store_mgmt():
 
     # Select movies
     mouse.goToPointAndClick(1200, 750)
-    pt = mouse.findPointByImage(candidates=['pics/store_mgmt_movies.png'], default=(1400, 1030), confidence=0.7)
+    pt = mouse.findPointByImage(candidates=['pics/store_mgmt_movies.png'], default=(1400, 1030))
     mouse.goToPointAndClick(pt[0], pt[1])
 
     sleep(2)

@@ -7,7 +7,7 @@ keyboard = CustomKeyboard()
 
 def confirm() -> bool:
     """Looks for a confirm button and clicks it. Returns True if found."""
-    pt = mouse.findPointByImage(candidates=['pics/confirm.png', 'pics/confirm2.png'], confidence=0.7)
+    pt = mouse.findPointByImage(candidates=['pics/confirm.png', 'pics/confirm2.png'])
     if pt is None:
         return False
     mouse.goToPointAndClick(pt[0], pt[1])
@@ -23,7 +23,7 @@ def watch_the_loader(max_time: int = 20, min_time: int = 5, pics: list = None):
     elapsed = 0
     while elapsed < max_time:
         sleep(2)
-        pt = mouse.findPointByImage(candidates=pics, confidence=0.7)
+        pt = mouse.findPointByImage(candidates=pics)
         if pt is None:
             break
         elapsed += 1
