@@ -32,7 +32,7 @@ def collect_rewards():
     sleep(2)
     mouse.goToPointAndClick(1500, 50)
     sleep(2)
-    pt = mouse.findPointByImage(candidates=['pics/claim_all2.png'], confidence=0.7)
+    pt = mouse.findPointByImage(candidates=['pics/claim_all.png'])
     if pt:
         mouse.goToPointAndClick(pt[0], pt[1])
         sleep(2)
@@ -40,16 +40,16 @@ def collect_rewards():
 
 
 def login():
-    pt = mouse.findPointByImage(candidates=['pics/p2p.png', 'pics/p2p_2.png'], default=(1000, 900), confidence=0.7)
+    pt = mouse.findPointByImage(candidates=['pics/p2p.png', 'pics/p2p_2.png'], default=(1000, 900))
     mouse.goToPointAndClick(pt[0], pt[1])
     watch_the_loader(pics=['pics/loading_config.png'], min_time=15, max_time=90)
 
     if confirm():
-        pt = mouse.findPointByImage(candidates=['pics/p2p.png', 'pics/p2p_2.png'], default=(1000, 900), confidence=0.7)
+        pt = mouse.findPointByImage(candidates=['pics/p2p.png', 'pics/p2p_2.png'], default=(1000, 900))
         mouse.goToPointAndClick(pt[0], pt[1])
         tsleep(60)
 
-    pt = mouse.findPointByImage(candidates=['pics/p2p.png', 'pics/p2p_2.png'], default=(1000, 900), confidence=0.7)
+    pt = mouse.findPointByImage(candidates=['pics/p2p.png', 'pics/p2p_2.png'], default=(1000, 900))
     mouse.goToPointAndClick(pt[0], pt[1])
     tsleep(15)
     watch_the_loader()
@@ -61,6 +61,14 @@ def monthly():
         mouse.goToPointAndClick(pt[0], pt[1])
         sleep(2)
 
+
+def login_rewards():
+    pt = mouse.findPointByImage(candidates=['pics/claim.png', 'pics/claim2.png'])
+    if pt:
+        mouse.goToPointAndClick(pt[0], pt[1])
+        sleep(2)
+        confirm()
+        sleep(2)
 
 def confirm_login() -> bool:
     for _ in range(5):
@@ -97,6 +105,7 @@ def main():
     launch_app()
     tsleep(30)
     login()
+    login_rewards()
     monthly()
     if not confirm_login():
         print("Login failed")
