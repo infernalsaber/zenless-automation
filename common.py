@@ -15,7 +15,7 @@ def confirm() -> bool:
     return True
 
 def claim() -> bool:
-    pt = mouse.findPointByImage(candidates=['pics/claim.png', 'pics/claim2.png', 'pics/claim3.png', 'pics/claim4.png'])
+    pt = mouse.findPointByImage(candidates=['pics/claim3.png', 'pics/claim4.png', 'pics/claim.png', 'pics/claim2.png', ], confidence=0.85)
     if pt:
         mouse.goToPointAndClick(pt[0], pt[1])
         sleep(2)

@@ -84,7 +84,7 @@ def store_mgmt():
     mouse.goToPointAndClick(pt[0], pt[1])
 
     sleep(2)
-    pt = mouse.findPointByImage(candidates=['waifu.png'])
+    pt = mouse.findPointByImage(candidates=['pics/waifu.png'])
     if pt:
         mouse.goToPointAndClick(pt[0], pt[1])
     
