@@ -14,6 +14,13 @@ def confirm() -> bool:
     sleep(2)
     return True
 
+def claim() -> bool:
+    pt = mouse.findPointByImage(candidates=['pics/claim.png', 'pics/claim2.png', 'pics/claim3.png', 'pics/claim4.png'])
+    if pt:
+        mouse.goToPointAndClick(pt[0], pt[1])
+        sleep(2)
+        return True
+    return False
 
 def watch_the_loader(max_time: int = 20, min_time: int = 5, pics: list = None):
     """Waits for a loading screen to disappear, then ensures a minimum wait time."""

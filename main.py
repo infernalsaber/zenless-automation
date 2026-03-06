@@ -8,7 +8,7 @@ from pynput.keyboard import Key
 
 from utils import tsleep, CustomMouse, CustomKeyboard, load_config
 from hoyolab import check_dailies_status
-from common import confirm, watch_the_loader
+from common import confirm, claim, watch_the_loader
 from dailies import complete_dailies
 
 mouse = CustomMouse()
@@ -32,10 +32,7 @@ def collect_rewards():
     sleep(2)
     mouse.goToPointAndClick(1500, 50)
     sleep(2)
-    pt = mouse.findPointByImage(candidates=['pics/claim_all.png'])
-    if pt:
-        mouse.goToPointAndClick(pt[0], pt[1])
-        sleep(2)
+    if claim():
         keyboard.softPress(Key.esc)
 
 
@@ -63,12 +60,8 @@ def monthly():
 
 
 def login_rewards():
-    pt = mouse.findPointByImage(candidates=['pics/claim.png', 'pics/claim2.png'])
-    if pt:
-        mouse.goToPointAndClick(pt[0], pt[1])
-        sleep(2)
+    if claim():
         confirm()
-        sleep(2)
 
 def confirm_login() -> bool:
     for _ in range(5):
