@@ -13,18 +13,18 @@ config = load_config()
 
 def initiate_errand():
     keyboard.press(Key.alt)
-    sleep(1)
+    sleep(0.5)
     mouse.slowlyMoveTo(1000, 400, 1)
-    keyboard.softPress(Key.f2)
     keyboard.release(Key.alt)
+    keyboard.softPress(Key.f2)
     sleep(2)
 
-    if not mouse.findPointByImage(candidates=['pics/errands2.png']):
+    if not mouse.findPointByImage(candidates=['pics/errands2.png'], confidence=0.9):
         errand_pt = mouse.findPointByImage(candidates=['pics/errands1.png', 'pics/errands2.png'], default=(973, 148))
         mouse.goToPointAndClick(errand_pt[0], errand_pt[1], 1)
         sleep(1)
     sleep(0.5)
-    mouse.goToPointAndClick(986, 834)
+    mouse.goToPointAndClick(1050, 834)
     sleep(2)
     mouse.goToPointAndClick(1121, 628)  # Teleport
 
@@ -36,7 +36,7 @@ def coffee():
     keyboard.softPress('f')
     sleep(2)
     keyboard.softPress('1')
-    sleep(2)
+    sleep(1.5)
     confirm()
 
 
@@ -48,22 +48,26 @@ def dinivation():
     mouse.goToPointAndClick(1500, 500)
     sleep(2)
 
+    drag_check = lambda: bool(mouse.findPointByImage(candidates=['pics/confirm.png', 'pics/confirm2.png']))
+
     # Dragging
     mouse.press(Button.left)
     for _ in range(7):
-        mouse.slowlyMoveTo(400 + random() * 50, 500 + random() * 50, 1)
-        mouse.slowlyMoveTo(900 + random() * 50, 500 - random() * 50, 1)
-
-        if mouse.findPointByImage(candidates=['pics/confirm.png', 'pics/confirm2.png']):
-            break
+        for x, y in [(400 + random() * 50, 500 + random() * 50),
+                     (900 + random() * 50, 500 - random() * 50)]:
+            mouse.slowlyMoveTo(x, y, 0.6)
+            if drag_check():
+                break
+        else:
+            continue
+        break
 
     mouse.release(Button.left)
-    sleep(2)
+    sleep(1)
     confirm()
-    keyboard.softPress(Key.esc)
-    sleep(2)
-    keyboard.softPress(Key.esc)
-    sleep(2)
+    for _ in range(2):
+        keyboard.softPress(Key.esc)
+        sleep(2)
 
 
 def store_mgmt():
@@ -109,4 +113,5 @@ def complete_dailies():
 
 
 if __name__ == "__main__":
+    sleep(10)
     complete_dailies()
