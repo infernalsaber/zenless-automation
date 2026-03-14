@@ -19,12 +19,12 @@ def initiate_errand():
     keyboard.softPress(Key.f2)
     sleep(2)
 
-    if not mouse.findPointByImage(candidates=['pics/errands2.png']):
+    if not mouse.findPointByImage(candidates=['pics/errands2.png'], confidence=0.9):
         errand_pt = mouse.findPointByImage(candidates=['pics/errands1.png', 'pics/errands2.png'], default=(973, 148))
         mouse.goToPointAndClick(errand_pt[0], errand_pt[1], 1)
         sleep(1)
     sleep(0.5)
-    mouse.goToPointAndClick(986, 834)
+    mouse.goToPointAndClick(1050, 834)
     sleep(2)
     mouse.goToPointAndClick(1121, 628)  # Teleport
 
@@ -36,7 +36,7 @@ def coffee():
     keyboard.softPress('f')
     sleep(2)
     keyboard.softPress('1')
-    sleep(2)
+    sleep(1.5)
     confirm()
 
 
@@ -55,7 +55,7 @@ def dinivation():
     for _ in range(7):
         for x, y in [(400 + random() * 50, 500 + random() * 50),
                      (900 + random() * 50, 500 - random() * 50)]:
-            mouse.slowlyMoveTo(x, y, 1)
+            mouse.slowlyMoveTo(x, y, 0.6)
             if drag_check():
                 break
         else:
@@ -63,7 +63,7 @@ def dinivation():
         break
 
     mouse.release(Button.left)
-    sleep(2)
+    sleep(1)
     confirm()
     for _ in range(2):
         keyboard.softPress(Key.esc)

@@ -1,4 +1,3 @@
-import ipdb
 import ctypes
 import sys
 import subprocess
@@ -9,7 +8,7 @@ from pynput.keyboard import Key
 from utils import tsleep, CustomMouse, CustomKeyboard, load_config
 from hoyolab import check_dailies_status
 from common import confirm, claim, watch_the_loader
-from dailies import complete_dailies
+from dailies import coffee, dinivation, store_mgmt
 
 mouse = CustomMouse()
 keyboard = CustomKeyboard()
@@ -17,6 +16,7 @@ config = load_config()
 
 
 def collect_rewards():
+    print('Collecting daily rewards...')
     # Daily menu
     sleep(2)
     keyboard.softPress(Key.f2)
@@ -27,6 +27,7 @@ def collect_rewards():
     keyboard.softPress(Key.esc)
 
     # City Pass
+    print('Claiming city pass...')
     sleep(2)
     keyboard.softPress(Key.f3)
     sleep(2)
@@ -37,6 +38,7 @@ def collect_rewards():
 
 
 def login():
+    print('Logging in...')
     pt = mouse.findPointByImage(candidates=['pics/p2p.png', 'pics/p2p_2.png'], default=(1000, 900))
     mouse.goToPointAndClick(pt[0], pt[1])
     watch_the_loader(pics=['pics/loading_config.png'], min_time=15, max_time=90)
@@ -48,11 +50,16 @@ def login():
 
     pt = mouse.findPointByImage(candidates=['pics/p2p.png', 'pics/p2p_2.png'], default=(1000, 900))
     mouse.goToPointAndClick(pt[0], pt[1])
-    tsleep(15)
+    tsleep(5)
+    pt = mouse.findPointByImage(candidates=['pics/p2p.png', 'pics/p2p_2.png'], default=(1000, 900))
+    if pt:
+        mouse.goToPointAndClick(pt[0], pt[1])
+    tsleep(10)
     watch_the_loader()
 
 
 def monthly():
+    print('Checking monthly bonus...')
     pt = mouse.findPointByImage(candidates=['pics/monthly.png', 'pics/monthly_2.png'])
     if pt:
         mouse.goToPointAndClick(pt[0], pt[1])
@@ -60,19 +67,24 @@ def monthly():
 
 
 def login_rewards():
+    print('Claiming login rewards...')
     if claim():
         confirm()
+        keyboard.softPress(Key.esc)
+
 
 def confirm_login() -> bool:
     for _ in range(5):
         if mouse.findPointByImage(candidates=['pics/login_confirm.png']):
-            print("Logged in")
+            print('Logged in successfully')
             return True
         sleep(1)
     return False
 
 
 def launch_app():
+    print('Launching game...')
+
     def is_admin():
         try:
             return ctypes.windll.shell32.IsUserAnAdmin()
@@ -82,39 +94,51 @@ def launch_app():
     if is_admin():
         subprocess.Popen([config['game_path']], cwd=os.path.dirname(config['game_path']))
     else:
-        # Re-launch this script with admin rights (triggers UAC once)
         ctypes.windll.shell32.ShellExecuteW(
-            None, "runas", sys.executable, f'"{__file__}"', None, 1
+            None, 'runas', sys.executable, f'"{__file__}"', None, 1
         )
+        sys.exit()
 
 
 def main():
+    print("Checking dailies' status...")
     if check_dailies_status():
-        print("Dailies are complete")
+        print('Dailies are already complete.')
         return
-    else:
-        print("Dailies are not complete, starting tasks")
+    print('Dailies not complete — starting tasks.')
 
     launch_app()
     tsleep(30)
     login()
+
     login_rewards()
     monthly()
+
     if not confirm_login():
-        print("Login failed")
+        print('Login failed — aborting.')
         return
 
-    tsleep(5, desc="Starting in")
+    tsleep(5, desc='Starting in')
 
-    complete_dailies()
+    print('Running dailies...')
+    print("Coffee - daily task #1")
+    coffee()
+    print("Dinivation - daily task #2")
+    dinivation()
+    print("Store management - daily task #3")
+    store_mgmt()
+
     collect_rewards()
 
     if check_dailies_status():
-        print("Dailies are complete")
+        print('All dailies complete ✓')
 
-    tsleep(5, desc="Closing in")
+    print('Closing game...')
+    tsleep(5, desc='Closing in')
     keyboard.holdKey([Key.alt, Key.f4], hold_time=0.4)
 
+    print('Done.')
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     main()
