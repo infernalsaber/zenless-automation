@@ -39,7 +39,13 @@ def collect_rewards():
 
 def login():
     print('Logging in...')
-    pt = mouse.findPointByImage(candidates=['pics/p2p.png', 'pics/p2p_2.png'], default=(1000, 900))
+    for attempt in range(10):
+        default = (1000, 900) if attempt == 9 else (0, 0)
+        pt = mouse.findPointByImage(candidates=['pics/p2p.png', 'pics/p2p_2.png'], default=default)
+        if pt != (0, 0):
+            break
+        print(f'Attempt {attempt + 1}/10 failed, retrying in 5s...')
+        tsleep(5)
     mouse.goToPointAndClick(pt[0], pt[1])
     watch_the_loader(pics=['pics/loading_config.png'], min_time=15, max_time=90)
 
